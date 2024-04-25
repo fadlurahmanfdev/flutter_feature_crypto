@@ -12,7 +12,7 @@ import "package:pointycastle/export.dart" hide RSASigner;
 class CryptoRSARepositoryImpl extends CryptoRSARepository {
   @override
   Future<CryptoKey> generateKey() async {
-    final secureRandom = SecureRandom('Fortuna');
+    // final secureRandom = SecureRandom('Fortuna');
     //   ..seed(
     //       KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
     // final keyGenerator = KeyGenerator('RSA');
@@ -26,7 +26,7 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
     // final encodedPrivate = RsaKeyHelper().encodePrivateKeyToPemPKCS1(private);
     // return CryptoKey(publicKey: encodedPublic, privateKey: encodedPrivate);
     final helper = RsaKeyHelper();
-    final key = await helper.computeRSAKeyPair(secureRandom);
+    final key = await helper.computeRSAKeyPair(helper.getSecureRandom());
     final privateKey = helper.encodePrivateKeyToPemPKCS1(key.privateKey as RSAPrivateKey);
     final publicKey = helper.encodePublicKeyToPemPKCS1(key.publicKey as RSAPublicKey);
     return Future(() => CryptoKey(publicKey: publicKey, privateKey: privateKey));
