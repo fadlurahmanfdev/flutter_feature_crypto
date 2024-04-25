@@ -39,7 +39,7 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
   }) {
     try {
       final publicKey = RSAKeyParser().parse(encodedPublicKey) as RSAPublicKey;
-      final encrypter = Encrypter(RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1));
+      final encrypter = Encrypter(RSA(publicKey: publicKey));
       return encrypter.encrypt(plainText).base64;
     } on Error catch (e, s) {
       log("failed encrypt on error: $e, $s");
@@ -58,7 +58,7 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
     try {
       final privateKey =
           RSAKeyParser().parse(encodedPrivateKey) as RSAPrivateKey;
-      final encrypter = Encrypter(RSA(privateKey: privateKey, encoding: RSAEncoding.OAEP));
+      final encrypter = Encrypter(RSA(privateKey: privateKey));
       return encrypter.decrypt64(encryptedText);
     } on Error catch (e, s) {
       log("failed decrypt on error: $e, $s");
