@@ -1,9 +1,7 @@
-
-
 import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
 
 abstract class CryptoRSARepository {
-  CryptoKey generateKey();
+  Future<CryptoKey> generateKey();
 
   String? encrypt({
     required String encodedPublicKey,

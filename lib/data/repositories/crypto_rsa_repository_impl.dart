@@ -11,20 +11,25 @@ import "package:pointycastle/export.dart" hide RSASigner;
 
 class CryptoRSARepositoryImpl extends CryptoRSARepository {
   @override
-  CryptoKey generateKey() {
-    final secureRandom = SecureRandom('Fortuna')
-      ..seed(
-          KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
-    final keyGenerator = KeyGenerator('RSA');
-    final rsaParams = RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 64);
-    final paramsWithRnd = ParametersWithRandom(rsaParams, secureRandom);
-    keyGenerator.init(paramsWithRnd);
-    final pair = keyGenerator.generateKeyPair();
-    final public = pair.publicKey as RSAPublicKey;
-    final private = pair.privateKey as RSAPrivateKey;
-    final encodedPublic = RsaKeyHelper().encodePublicKeyToPemPKCS1(public);
-    final encodedPrivate = RsaKeyHelper().encodePrivateKeyToPemPKCS1(private);
-    return CryptoKey(publicKey: encodedPublic, privateKey: encodedPrivate);
+  Future<CryptoKey> generateKey() async {
+    final secureRandom = SecureRandom('Fortuna');
+    //   ..seed(
+    //       KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
+    // final keyGenerator = KeyGenerator('RSA');
+    // final rsaParams = RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 64);
+    // final paramsWithRnd = ParametersWithRandom(rsaParams, secureRandom);
+    // keyGenerator.init(paramsWithRnd);
+    // final pair = keyGenerator.generateKeyPair();
+    // final public = pair.publicKey as RSAPublicKey;
+    // final private = pair.privateKey as RSAPrivateKey;
+    // final encodedPublic = RsaKeyHelper().encodePublicKeyToPemPKCS1(public);
+    // final encodedPrivate = RsaKeyHelper().encodePrivateKeyToPemPKCS1(private);
+    // return CryptoKey(publicKey: encodedPublic, privateKey: encodedPrivate);
+    final helper = RsaKeyHelper();
+    final key = await helper.computeRSAKeyPair(secureRandom);
+    final privateKey = helper.encodePrivateKeyToPemPKCS1(key.privateKey as RSAPrivateKey);
+    final publicKey = helper.encodePublicKeyToPemPKCS1(key.publicKey as RSAPublicKey);
+    return Future(() => CryptoKey(publicKey: publicKey, privateKey: privateKey));
   }
 
   @override
@@ -34,7 +39,7 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
   }) {
     try {
       final publicKey = RSAKeyParser().parse(encodedPublicKey) as RSAPublicKey;
-      final encrypter = Encrypter(RSA(publicKey: publicKey));
+      final encrypter = Encrypter(RSA(publicKey: publicKey, encoding: RSAEncoding.PKCS1));
       return encrypter.encrypt(plainText).base64;
     } on Error catch (e, s) {
       log("failed encrypt on error: $e, $s");
@@ -53,7 +58,7 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
     try {
       final privateKey =
           RSAKeyParser().parse(encodedPrivateKey) as RSAPrivateKey;
-      final encrypter = Encrypter(RSA(privateKey: privateKey));
+      final encrypter = Encrypter(RSA(privateKey: privateKey, encoding: RSAEncoding.OAEP));
       return encrypter.decrypt64(encryptedText);
     } on Error catch (e, s) {
       log("failed decrypt on error: $e, $s");
