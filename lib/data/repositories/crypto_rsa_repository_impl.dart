@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' hide SecureRandom;
-import 'package:library_core_crypto/data/dto/model/crypto_key.dart';
-import 'package:library_core_crypto/data/repositories/crypto_rsa_repository.dart';
+import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
+import 'package:flutter_core_crypto/data/repositories/crypto_rsa_repository.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';

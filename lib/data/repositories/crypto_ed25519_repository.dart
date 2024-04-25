@@ -1,4 +1,4 @@
-import 'package:library_core_crypto/data/dto/model/crypto_key.dart';
+import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
 
 abstract class CryptoED25519Repository {
   CryptoKey generateKey();

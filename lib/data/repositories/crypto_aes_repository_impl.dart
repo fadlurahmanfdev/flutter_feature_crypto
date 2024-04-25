@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:encrypt/encrypt.dart';
-import 'package:library_core_crypto/data/dto/exception/core_crypto_exception.dart';
-import 'package:library_core_crypto/data/repositories/crypto_aes_repository.dart';
+import 'package:flutter_core_crypto/data/dto/exception/core_crypto_exception.dart';
+import 'package:flutter_core_crypto/data/repositories/crypto_aes_repository.dart';
 
 class CryptoAESRepositoryImpl extends CryptoAESRepository {
   String generateRandomKey(int length) {
