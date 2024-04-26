@@ -1,46 +1,73 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' hide SecureRandom;
 import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
+import 'package:flutter_core_crypto/data/enum/rsa_digest.dart';
+import 'package:flutter_core_crypto/data/enum/rsa_encoding.dart';
 import 'package:flutter_core_crypto/data/repositories/crypto_rsa_repository.dart';
 import 'package:pointycastle/pointycastle.dart';
-import 'package:rsa_encrypt/rsa_encrypt.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart" hide RSASigner;
+import 'package:basic_utils/basic_utils.dart';
 
 class CryptoRSARepositoryImpl extends CryptoRSARepository {
+  RSAEncoding convertEncoding(CoreCrytoRSAEncoding encoding) {
+    switch (encoding) {
+      case CoreCrytoRSAEncoding.PKCS1:
+        return RSAEncoding.PKCS1;
+      case CoreCrytoRSAEncoding.OAEP:
+        return RSAEncoding.OAEP;
+    }
+  }
+
+  RSADigest convertDigest(CoreCryptoRSADigest digest) {
+    switch (digest) {
+      case CoreCryptoRSADigest.SHA1:
+        return RSADigest.SHA1;
+      case CoreCryptoRSADigest.SHA256:
+        return RSADigest.SHA256;
+    }
+  }
+
   @override
-  Future<CryptoKey> generateKey() async {
-    // final secureRandom = SecureRandom('Fortuna');
-    //   ..seed(
-    //       KeyParameter(Platform.instance.platformEntropySource().getBytes(32)));
-    // final keyGenerator = KeyGenerator('RSA');
-    // final rsaParams = RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 64);
-    // final paramsWithRnd = ParametersWithRandom(rsaParams, secureRandom);
-    // keyGenerator.init(paramsWithRnd);
-    // final pair = keyGenerator.generateKeyPair();
-    // final public = pair.publicKey as RSAPublicKey;
-    // final private = pair.privateKey as RSAPrivateKey;
-    // final encodedPublic = RsaKeyHelper().encodePublicKeyToPemPKCS1(public);
-    // final encodedPrivate = RsaKeyHelper().encodePrivateKeyToPemPKCS1(private);
-    // return CryptoKey(publicKey: encodedPublic, privateKey: encodedPrivate);
-    final helper = RsaKeyHelper();
-    final key = await helper.computeRSAKeyPair(helper.getSecureRandom());
-    final privateKey = helper.encodePrivateKeyToPemPKCS1(key.privateKey as RSAPrivateKey);
-    final publicKey = helper.encodePublicKeyToPemPKCS1(key.publicKey as RSAPublicKey);
-    return Future(() => CryptoKey(publicKey: publicKey, privateKey: privateKey));
+  CryptoKey generateKey() {
+    final secureRandom = SecureRandom('Fortuna')
+      ..seed(
+        KeyParameter(Platform.instance.platformEntropySource().getBytes(32)),
+      );
+    final keyGen = RSAKeyGenerator();
+    keyGen.init(ParametersWithRandom(
+      RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
+      secureRandom,
+    ));
+    final pair = CryptoUtils.generateRSAKeyPair(keySize: 2048);
+    final publicKey = pair.publicKey as RSAPublicKey;
+    final privateKey = pair.privateKey as RSAPrivateKey;
+    final encodedPublicKey = CryptoUtils.encodeRSAPublicKeyToPem(publicKey);
+    final encodedPrivateKey = CryptoUtils.encodeRSAPrivateKeyToPem(privateKey);
+    return CryptoKey(
+      publicKey: encodedPublicKey,
+      privateKey: encodedPrivateKey,
+    );
   }
 
   @override
   String? encrypt({
     required String encodedPublicKey,
     required String plainText,
+    required CoreCrytoRSAEncoding encoding,
+    required CoreCryptoRSADigest digest,
   }) {
     try {
       final publicKey = RSAKeyParser().parse(encodedPublicKey) as RSAPublicKey;
-      final encrypter = Encrypter(RSA(publicKey: publicKey));
-      return encrypter.encrypt(plainText).base64;
+      final encrypter = Encrypter(RSA(
+          publicKey: publicKey,
+          encoding: convertEncoding(encoding),
+        digest: convertDigest(digest),
+      ));
+      return base64.encode(encrypter.encrypt(plainText).bytes);
     } on Error catch (e, s) {
       log("failed encrypt on error: $e, $s");
       return null;
@@ -54,11 +81,17 @@ class CryptoRSARepositoryImpl extends CryptoRSARepository {
   String? decrypt({
     required String encodedPrivateKey,
     required String encryptedText,
+    required CoreCrytoRSAEncoding encoding,
+    required CoreCryptoRSADigest digest,
   }) {
     try {
       final privateKey =
           RSAKeyParser().parse(encodedPrivateKey) as RSAPrivateKey;
-      final encrypter = Encrypter(RSA(privateKey: privateKey));
+      final encrypter = Encrypter(RSA(
+        privateKey: privateKey,
+        encoding: convertEncoding(encoding),
+        digest: convertDigest(digest),
+      ));
       return encrypter.decrypt64(encryptedText);
     } on Error catch (e, s) {
       log("failed decrypt on error: $e, $s");

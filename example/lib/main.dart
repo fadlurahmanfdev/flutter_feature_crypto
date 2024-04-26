@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_core_crypto/flutter_core_crypto.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +59,37 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late CryptoRSARepository cryptoRSARepository;
+
+  @override
+  void initState() {
+    super.initState();
+    cryptoRSARepository = CryptoRSARepositoryImpl();
+
+    final key = cryptoRSARepository.generateKey();
+    final publicKey = key.publicKey;
+    final privateKey = key.privateKey;
+    log("PUBLIC KEY: $publicKey");
+    log("PRIVATE KEY: $privateKey");
+
+    final encrypted = cryptoRSARepository.encrypt(
+      encodedPublicKey: publicKey,
+      plainText: "TES",
+      encoding: CoreCrytoRSAEncoding.PKCS1,
+      digest: CoreCryptoRSADigest.SHA1,
+    );
+    log("ENCRYPTED: $encrypted");
+
+    if (encrypted != null) {
+      final decrypted = cryptoRSARepository.decrypt(
+        encodedPrivateKey: privateKey,
+        encryptedText: encrypted,
+        encoding: CoreCrytoRSAEncoding.PKCS1,
+        digest: CoreCryptoRSADigest.SHA1,
+      );
+      log("DECRYPTED: $decrypted");
+    }
+  }
 
   void _incrementCounter() {
     setState(() {
