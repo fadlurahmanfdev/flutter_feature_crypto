@@ -15,6 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout V3
+        uses: actions/checkout@v3
+      - name: Check TAG Version
         run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "TAG VERSION: $GITHUB_REF_NAME"
+          echo "TAG VERSION: ${{  github.ref_name }}"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+          
