@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   flutter_core_crypto:
-    path: ../../library_core_crypto
+    path: ../../flutter_core_crypto
 
 dev_dependencies:
   flutter_test:

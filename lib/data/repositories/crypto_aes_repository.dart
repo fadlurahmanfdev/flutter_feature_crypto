@@ -4,12 +4,14 @@ abstract class CryptoAESRepository {
 
   String getIVKey();
 
+  // TODO(dev): change key to encoded key
   String? encrypt({
     required String key,
     required String ivKey,
     required String plainText,
   });
 
+  // TODO(dev): change key to encoded key
   String? decrypt({
     required String key,
     required String ivKey,
