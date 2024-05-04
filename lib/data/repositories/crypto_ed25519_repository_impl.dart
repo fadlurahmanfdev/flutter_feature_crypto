@@ -10,8 +10,12 @@ class CryptoED25519RepositoryIml extends CryptoED25519Repository {
     return ed.PrivateKey(base64.decode(encodedPrivateKey));
   }
 
-  ed.PublicKey getPublicKey(String encodedPrivateKey) {
+  ed.PublicKey getPublicKeyFromPrivateKey(String encodedPrivateKey) {
     return ed.public(getPrivateKey(encodedPrivateKey));
+  }
+
+  ed.PublicKey getPublicKey(String encodedPublicKey) {
+    return ed.PublicKey(base64.decode(encodedPublicKey));
   }
 
   @override
@@ -40,13 +44,36 @@ class CryptoED25519RepositoryIml extends CryptoED25519Repository {
     }
   }
 
-  bool verifySignature({
+  @override
+  bool verifySignatureUsingPrivateKey({
     required String encodedPrivateKey,
     required String encodedSignature,
     required String plainText,
   }) {
     try {
-      final publicKey = getPublicKey(encodedPrivateKey);
+      final publicKey = getPublicKeyFromPrivateKey(encodedPrivateKey);
+      return ed.verify(
+        publicKey,
+        utf8.encode(plainText),
+        base64.decode(encodedSignature),
+      );
+    } on Error catch (e, s) {
+      log("failed verifySignatureUsingPrivateKey on error: $e, $s");
+      return false;
+    } on Exception catch (e, s) {
+      log("failed verifySignatureUsingPrivateKey on exception: $e, $s");
+      return false;
+    }
+  }
+
+  @override
+  bool verifySignature({
+    required String encodedPublicKey,
+    required String encodedSignature,
+    required String plainText,
+  }) {
+    try {
+      final publicKey = getPublicKey(encodedPublicKey);
       return ed.verify(
         publicKey,
         utf8.encode(plainText),

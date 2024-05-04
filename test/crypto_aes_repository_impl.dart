@@ -1,7 +1,7 @@
 import 'package:flutter_core_crypto/flutter_core_crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void cryptoAesRepositoryImpl() {
+Future<void> cryptoAesRepositoryImpl() async {
   late CryptoAESRepository cryptoAesRepository;
   group('AES Test', () {
     setUp(() {
@@ -10,7 +10,7 @@ void cryptoAesRepositoryImpl() {
 
     test('generate aes key success', () {
       final key = cryptoAesRepository.getKey(16);
-      expect(true, key.isNotEmpty);
+      expect(key.isNotEmpty, true);
       expect(key.length, 16);
     });
 
@@ -25,8 +25,12 @@ void cryptoAesRepositoryImpl() {
     });
 
     test('failed generate aes key with non 16/24/32 length key', () {
-      final key = cryptoAesRepository.getKey(25);
-      expect(key.length, 32);
+      try {
+        cryptoAesRepository.getKey(25);
+      } on CoreCryptoException catch (e) {
+        expect(e.code, "SIZE_NOT_VALID");
+        expect(e.message, "Size must be 16/24/32");
+      }
     });
 
     test('generate iv key success', () {

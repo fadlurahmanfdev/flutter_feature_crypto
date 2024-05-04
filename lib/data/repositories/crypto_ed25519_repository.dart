@@ -8,8 +8,14 @@ abstract class CryptoED25519Repository {
     required String plainText,
   });
 
-  bool verifySignature({
+  bool verifySignatureUsingPrivateKey({
     required String encodedPrivateKey,
+    required String encodedSignature,
+    required String plainText,
+  });
+
+  bool verifySignature({
+    required String encodedPublicKey,
     required String encodedSignature,
     required String plainText,
   });
