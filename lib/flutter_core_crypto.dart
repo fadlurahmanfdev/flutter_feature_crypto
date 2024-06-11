@@ -1,4 +1,4 @@
-library library_core_crypto;
+library flutter_core_crypto;
 
 export 'data/dto/exception/core_crypto_exception.dart';
 export 'data/dto/model/crypto_key.dart';

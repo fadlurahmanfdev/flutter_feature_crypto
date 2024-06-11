@@ -1,3 +1,4 @@
+import 'package:flutter_core_crypto/data/dto/exception/core_crypto_exception.dart';
 import 'package:flutter_core_crypto/flutter_core_crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
