@@ -75,8 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final encrypted = cryptoRSARepository.encrypt(
       encodedPublicKey: publicKey,
       plainText: "TES",
-      encoding: CoreCrytoRSAEncoding.PKCS1,
-      digest: CoreCryptoRSADigest.SHA1,
+      encoding: CoreCrytoRSAEncoding.pkcs1,
+      digest: CoreCryptoRSADigest.sha1,
     );
     log("ENCRYPTED: $encrypted");
 
@@ -84,8 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: privateKey,
         encryptedText: encrypted,
-        encoding: CoreCrytoRSAEncoding.PKCS1,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.pkcs1,
+        digest: CoreCryptoRSADigest.sha1,
       );
       log("DECRYPTED: $decrypted");
     }

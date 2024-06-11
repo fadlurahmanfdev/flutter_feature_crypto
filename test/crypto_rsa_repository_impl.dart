@@ -48,8 +48,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final encrypted = cryptoRSARepository.encrypt(
         encodedPublicKey: key.publicKey,
         plainText: plainText,
-        encoding: CoreCrytoRSAEncoding.PKCS1,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.pkcs1,
+        digest: CoreCryptoRSADigest.sha1,
       );
       expect(encrypted != null, true);
       expect(encrypted?.isNotEmpty, true);
@@ -57,8 +57,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: key.privateKey,
         encryptedText: encrypted!,
-        encoding: CoreCrytoRSAEncoding.PKCS1,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.pkcs1,
+        digest: CoreCryptoRSADigest.sha1,
       );
       expect(decrypted, plainText);
     });
@@ -69,8 +69,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final encrypted = cryptoRSARepository.encrypt(
         encodedPublicKey: key.publicKey,
         plainText: plainText,
-        encoding: CoreCrytoRSAEncoding.OAEP,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.oaep,
+        digest: CoreCryptoRSADigest.sha1,
       );
       expect(encrypted != null, true);
       expect(encrypted?.isNotEmpty, true);
@@ -78,8 +78,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: key.privateKey,
         encryptedText: encrypted!,
-        encoding: CoreCrytoRSAEncoding.OAEP,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.oaep,
+        digest: CoreCryptoRSADigest.sha1,
       );
       expect(decrypted, plainText);
     });
@@ -90,8 +90,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final encrypted = cryptoRSARepository.encrypt(
         encodedPublicKey: key.publicKey,
         plainText: plainText,
-        encoding: CoreCrytoRSAEncoding.OAEP,
-        digest: CoreCryptoRSADigest.SHA256,
+        encoding: CoreCrytoRSAEncoding.oaep,
+        digest: CoreCryptoRSADigest.sha256,
       );
       expect(encrypted != null, true);
       expect(encrypted?.isNotEmpty, true);
@@ -99,8 +99,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: key.privateKey,
         encryptedText: encrypted!,
-        encoding: CoreCrytoRSAEncoding.OAEP,
-        digest: CoreCryptoRSADigest.SHA256,
+        encoding: CoreCrytoRSAEncoding.oaep,
+        digest: CoreCryptoRSADigest.sha256,
       );
       expect(decrypted, plainText);
     });
@@ -111,8 +111,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final encrypted = cryptoRSARepository.encrypt(
         encodedPublicKey: key.publicKey,
         plainText: plainText,
-        encoding: CoreCrytoRSAEncoding.OAEP,
-        digest: CoreCryptoRSADigest.SHA256,
+        encoding: CoreCrytoRSAEncoding.oaep,
+        digest: CoreCryptoRSADigest.sha256,
       );
       expect(encrypted != null, true);
       expect(encrypted?.isNotEmpty, true);
@@ -120,8 +120,8 @@ Future<void> cryptoRSARepositoryImpl() async {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: key.privateKey,
         encryptedText: encrypted!,
-        encoding: CoreCrytoRSAEncoding.PKCS1,
-        digest: CoreCryptoRSADigest.SHA256,
+        encoding: CoreCrytoRSAEncoding.pkcs1,
+        digest: CoreCryptoRSADigest.sha256,
       );
       expect(decrypted, null);
     });

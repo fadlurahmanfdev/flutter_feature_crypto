@@ -1,4 +1,4 @@
 enum CoreCryptoRSADigest {
-  SHA1,
-  SHA256,
+  sha1,
+  sha256,
 }
