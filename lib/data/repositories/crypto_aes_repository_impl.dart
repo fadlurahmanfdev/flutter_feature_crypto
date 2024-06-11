@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:math' hide log;
 import 'package:encrypt/encrypt.dart';
-import 'package:flutter_core_crypto/data/dto/exception/index.dart';
+import 'package:flutter_core_crypto/data/dto/exception/core_crypto_exception.dart';
 import 'crypto_aes_repository.dart';
 
 class CryptoAESRepositoryImpl extends CryptoAESRepository {
