@@ -36,9 +36,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String key,
     required String ivKey,
     required String plainText,
+    AESMode mode = AESMode.cbc,
   }) {
     try {
-      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: AESMode.cbc));
+      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.encrypt(plainText, iv: iv).base64;
     } on Error catch (e, s) {
@@ -55,9 +56,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String key,
     required String ivKey,
     required String encryptedText,
+    AESMode mode = AESMode.cbc,
   }) {
     try {
-      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: AESMode.cbc));
+      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
     } on Error catch (e, s) {
