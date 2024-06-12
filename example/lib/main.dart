@@ -1,19 +1,41 @@
 import 'dart:developer';
 
+import 'package:example/domain/crypto_usecase_impl.dart';
+import 'package:example/presentation/main_page.dart';
+import 'package:example/presentation/main_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_core_crypto/flutter_core_crypto.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+
+  @override
+  void initState() {
+    super.initState();
+    Get.put(MainController(
+      cryptoUseCase: CryptoUseCaseImpl(
+        cryptoAESRepository: CryptoAESRepositoryImpl(),
+        cryptoRSARepository: CryptoRSARepositoryImpl(),
+        cryptoED25519Repository: CryptoED25519RepositoryIml(),
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -34,7 +56,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MainPage(),
     );
   }
 }
@@ -75,8 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final encrypted = cryptoRSARepository.encrypt(
       encodedPublicKey: publicKey,
       plainText: "TES",
-      encoding: CoreCrytoRSAEncoding.PKCS1,
-      digest: CoreCryptoRSADigest.SHA1,
+      encoding: CoreCrytoRSAEncoding.pkcs1,
+      digest: CoreCryptoRSADigest.sha1,
     );
     log("ENCRYPTED: $encrypted");
 
@@ -84,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
       final decrypted = cryptoRSARepository.decrypt(
         encodedPrivateKey: privateKey,
         encryptedText: encrypted,
-        encoding: CoreCrytoRSAEncoding.PKCS1,
-        digest: CoreCryptoRSADigest.SHA1,
+        encoding: CoreCrytoRSAEncoding.pkcs1,
+        digest: CoreCryptoRSADigest.sha1,
       );
       log("DECRYPTED: $decrypted");
     }

@@ -1,4 +1,4 @@
 enum CoreCrytoRSAEncoding {
-  PKCS1,
-  OAEP,
+  pkcs1,
+  oaep,
 }

@@ -1,14 +1,12 @@
 import 'dart:developer';
 import 'dart:math' hide log;
-
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_core_crypto/data/dto/exception/core_crypto_exception.dart';
-import 'package:flutter_core_crypto/data/repositories/crypto_aes_repository.dart';
+import 'crypto_aes_repository.dart';
 
 class CryptoAESRepositoryImpl extends CryptoAESRepository {
   String generateRandomKey(int length) {
-    const mChars =
-        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    const mChars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     return String.fromCharCodes(
       Iterable.generate(
         length,
@@ -38,9 +36,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String key,
     required String ivKey,
     required String plainText,
+    AESMode mode = AESMode.cbc,
   }) {
     try {
-      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: AESMode.cbc));
+      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.encrypt(plainText, iv: iv).base64;
     } on Error catch (e, s) {
@@ -57,9 +56,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String key,
     required String ivKey,
     required String encryptedText,
+    AESMode mode = AESMode.cbc,
   }) {
     try {
-      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: AESMode.cbc));
+      final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
     } on Error catch (e, s) {
