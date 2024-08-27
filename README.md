@@ -1,6 +1,6 @@
 # Overview
 
-This document provides an overview of the method(s) available in this library/package, including details on how to use them, the parameters they accept, and examples of usage.
+Flutter library that provides a cryptography solution using a repository implementation. This library simplifies the process of handling cryptographic functions such as encryption, decryption, hashing, and digital signatures by leveraging a structured repository pattern. It is designed to be easy to integrate into any Flutter project, ensuring secure data handling and storage with a flexible and scalable architecture.
 
 ## Methods
 ### AES
