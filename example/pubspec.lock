@@ -134,14 +134,12 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_core_crypto:
+  flutter_feature_crypto:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "v0.0.14"
-      resolved-ref: "1d2d4550cfab3978ddef1c53fdbaf7fb046cd393"
-      url: "https://github.com/fadlurahmanfdev/flutter_core_crypto.git"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   flutter_lints:
     dependency: "direct dev"

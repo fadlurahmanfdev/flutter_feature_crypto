@@ -1,5 +1,5 @@
-name: flutter_core_crypto
-description: "Library Core Crypto"
+name: flutter_feature_crypto
+description: "Library Feature Crypto"
 version: 0.0.1
 publish_to: none
 

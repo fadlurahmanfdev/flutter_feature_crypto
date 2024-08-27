@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:math' hide log;
 import 'package:encrypt/encrypt.dart';
-import 'package:flutter_core_crypto/data/dto/exception/core_crypto_exception.dart';
+import 'package:flutter_feature_crypto/data/dto/exception/core_crypto_exception.dart';
 import 'crypto_aes_repository.dart';
 
 class CryptoAESRepositoryImpl extends CryptoAESRepository {
@@ -20,7 +20,7 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     if (size == 16 || size == 24 || size == 32) {
       return generateRandomKey(size);
     }
-    throw CoreCryptoException(
+    throw FeatureCryptoException(
       code: 'SIZE_NOT_VALID',
       message: 'Size must be 16/24/32',
     );

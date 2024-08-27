@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
-import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
-import 'package:flutter_core_crypto/data/repositories/crypto_ed25519_repository.dart';
+import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
+import 'package:flutter_feature_crypto/data/repositories/crypto_ed25519_repository.dart';
 
 class CryptoED25519RepositoryIml extends CryptoED25519Repository {
   ed.PrivateKey getPrivateKey(String encodedPrivateKey) {

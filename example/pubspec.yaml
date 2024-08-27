@@ -24,7 +24,7 @@ environment:
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
+# dependencies can be manually updated by chan ging the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
@@ -38,12 +38,12 @@ dependencies:
 
   get: ^4.6.6
 
+  flutter_feature_crypto:
+    path: ../../flutter_feature_crypto
 #  flutter_core_crypto:
-#    path: ../../flutter_core_crypto
-  flutter_core_crypto:
-    git:
-      url: https://github.com/fadlurahmanfdev/flutter_core_crypto.git
-      ref: v0.0.14
+#    git:
+#      url: https://github.com/fadlurahmanfdev/flutter_core_crypto.git
+#      ref: v0.0.14
 
 dev_dependencies:
   flutter_test:
