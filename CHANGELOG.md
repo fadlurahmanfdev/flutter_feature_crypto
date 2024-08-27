@@ -1,4 +1,4 @@
-## 0.0.2
+## 0.0.3
 
-### Added
-- Added READ.me
+### Changed
+- fix minor to get pub point better
