@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' hide SecureRandom;
-import 'package:flutter_core_crypto/data/dto/model/crypto_key.dart';
-import 'package:flutter_core_crypto/data/enum/rsa_digest.dart';
-import 'package:flutter_core_crypto/data/enum/rsa_encoding.dart';
-import 'package:flutter_core_crypto/data/repositories/crypto_rsa_repository.dart';
+import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
+import 'package:flutter_feature_crypto/data/enum/rsa_digest.dart';
+import 'package:flutter_feature_crypto/data/enum/rsa_encoding.dart';
+import 'package:flutter_feature_crypto/data/repositories/crypto_rsa_repository.dart';
 import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart" hide RSASigner;
 import 'package:basic_utils/basic_utils.dart';

@@ -1,8 +1,8 @@
-class CoreCryptoException implements Exception {
+class FeatureCryptoException implements Exception {
   String code;
   String message;
 
-  CoreCryptoException({
+  FeatureCryptoException({
     required this.code,
     required this.message,
   });

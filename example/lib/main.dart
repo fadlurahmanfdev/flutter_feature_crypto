@@ -4,7 +4,7 @@ import 'package:example/domain/crypto_usecase_impl.dart';
 import 'package:example/presentation/main_page.dart';
 import 'package:example/presentation/main_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_core_crypto/flutter_core_crypto.dart';
+import 'package:flutter_feature_crypto/flutter_feature_crypto.dart';
 import 'package:get/get.dart';
 
 void main() {

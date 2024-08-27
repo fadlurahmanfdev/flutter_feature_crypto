@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'crypto_usecase.dart';
-import 'package:flutter_core_crypto/flutter_core_crypto.dart';
+import 'package:flutter_feature_crypto/flutter_feature_crypto.dart';
 
 class CryptoUseCaseImpl extends CryptoUseCase {
   CryptoAESRepository cryptoAESRepository;
