@@ -1,8 +1,7 @@
 name: flutter_feature_crypto
 description: "Library Feature Crypto"
 version: 0.0.1
-publish_to: https://pub.dev
-homepage: https://github.com/fadlurahmanfdev/flutter_feature_crypto
+homepage: "https://github.com/fadlurahmanfdev/flutter_feature_crypto"
 
 environment:
   sdk: '>=3.3.3 <4.0.0'
@@ -12,10 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  basic_utils: ^5.7.0
   ed25519_edwards: ^0.3.1
   encrypt: ^5.0.3
+  pointycastle: ^3.9.1
   rsa_encrypt: ^2.0.0
-  basic_utils: ^5.7.0
 
 dev_dependencies:
   flutter_test:
