@@ -1,3 +1,4 @@
-## 0.0.1
+## 0.0.2 - 2024-08-27
 
-* TODO: Describe initial release.
+### Added
+- Added READ.me
