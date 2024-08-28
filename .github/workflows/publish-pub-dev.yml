@@ -11,9 +11,12 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1
-      - name: Install dependencies
-        run: flutter clean && flutter pub get
-      - name: Publish
-        run: dart pub publish
+      - name: Checkout V4
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.10.6
+      - run: |
+          flutter clean && flutter pub get && dart pub publish
