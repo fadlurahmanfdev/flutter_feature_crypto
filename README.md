@@ -14,9 +14,9 @@ Generate AES Key
 final key = cryptoAESRepository.getKey(32);
 ```
 
-| Parameter Name | Type       | Required | Description |
-|----------------|------------|----------|-------------|
-| `size`         | int        | Yes      | possibility value is 16/24/32 |
+| Parameter Name | Type       | Required | Description                                                                       |
+|----------------|------------|----------|-----------------------------------------------------------------------------------|
+| `size`         | int        | Yes      | Possible values are 16, 24, or 32. Otherwise, it will throw `CoreCryptoException` |
 
 #### Get IV Key
 
@@ -38,9 +38,9 @@ final encrypted = cryptoAESRepository.encrypt(key: key, ivKey: ivKey, plainText:
 
 | Parameter Name | Type       | Required | Description                                   |
 |----------------|------------|----------|-----------------------------------------------|
-| `key`          | string     | Yes      | key generated from Generate Key               |
-| `ivKey`        | string     | Yes      | vector key generated from Get IV Key          |
-| `plainText`    | string     | Yes      | text want to be encrypted                     |
+| `key`          | string     | Yes      | Key generated from `Generate Key`              |
+| `ivKey`        | string     | Yes      | Vector key generated from `Get IV Key`        |
+| `plainText`    | string     | Yes      | Text to be encrypted                 |
 | `mode`         | AESMode    | no      | AES Encryption mode, default is `AESMode.cbc` |
 
 #### Decrypt
@@ -52,11 +52,11 @@ Decrypt encrypted text
 final decrypted = cryptoAESRepository.decrypt(key: key, ivKey: ivKey, encryptedText: encrypted);
 ```
 
-| Parameter Name | Type       | Required | Description                                   |
-|----------------|------------|----------|-----------------------------------------------|
-| `key`          | string     | Yes      | key generated from Generate Key               |
-| `ivKey`        | string     | Yes      | vector key generated from Get IV Key          |
-| `plainText`    | string     | Yes      | text want to be encrypted                     |
+| Parameter Name | Type       | Required | Description                                 |
+|----------------|------------|----------|---------------------------------------------|
+| `key`          | string     | Yes      | Key generated from `Generate Key`            |
+| `ivKey`        | string     | Yes      | Vector key generated from `Get IV Key`      |
+| `encryptedText`    | string     | Yes      | Encrypted text                    |
 | `mode`         | AESMode    | no       | AES Encryption mode, default is `AESMode.cbc` |
 
 ### RSA
@@ -86,9 +86,9 @@ final encrypted = cryptoRSARepository.encrypt(
 
 | Parameter Name     | Type       | Required | Description                            |
 |--------------------|------------|----------|----------------------------------------|
-| `encodedPublicKey` | string     | Yes      | public key generated from Generate Key |
+| `encodedPublicKey` | string     | Yes      | Public key generated from `Generate Key` |
 | `encoding`         | CoreCrytoRSAEncoding     | Yes      | -                                      |
-| `plainText`        | string     | Yes      | text want to be encrypted              |
+| `plainText`        | string     | Yes      | Text to be encrypted           |
 | `digest`           | CoreCryptoRSADigest    | yes      | -                                      |
 
 #### Decrypt
@@ -105,12 +105,12 @@ final decrypted = cryptoRSARepository.decrypt(
 );
 ```
 
-| Parameter Name     | Type       | Required | Description                            |
-|--------------------|------------|----------|----------------------------------------|
-| `encodedPublicKey` | string     | Yes      | public key generated from Generate Key |
-| `encoding`         | CoreCrytoRSAEncoding     | Yes      | -                                      |
-| `plainText`        | string     | Yes      | text want to be encrypted              |
-| `digest`           | CoreCryptoRSADigest    | yes      | -                                      |
+| Parameter Name     | Type       | Required | Description                              |
+|--------------------|------------|----------|------------------------------------------|
+| `encodedPublicKey` | string     | Yes      | Public key generated from `Generate Key` |
+| `encoding`         | CoreCrytoRSAEncoding     | Yes      | -                                        |
+| `encryptedText`        | string     | Yes      | Encrypted Text to be decrypted           |
+| `digest`           | CoreCryptoRSADigest    | yes      | -                                        |
 
 
 ### ED25519
@@ -136,8 +136,8 @@ cryptoED25519Repository.generateSignature(encodedPrivateKey: key.privateKey, pla
 
 | Parameter Name     | Type       | Required | Description                             |
 |--------------------|------------|----------|-----------------------------------------|
-| `encodedPrivateKey` | string     | Yes      | private key generated from Generate Key |
-| `plainText`        | string     | Yes      | text want to be make into a signature   |
+| `encodedPrivateKey` | string     | Yes      | Private key generated from `Generate Key` |
+| `plainText`        | string     | Yes      | Text to be made into a signature   |
 
 #### Verify Signature
 
@@ -154,6 +154,6 @@ final isSignatureVerified = cryptoED25519Repository.verifySignature(
 
 | Parameter Name     | Type       | Required | Description                                |
 |--------------------|------------|----------|--------------------------------------------|
-| `encodedPublicKey` | string     | Yes      | public key generated from Generate Key     |
-| `plainText`        | string     | Yes      | text want to be verified                   |
-| `encodedSignature`        | string     | Yes      | signature want to be verified by plainText |
+| `encodedPublicKey` | string     | Yes      | Public key generated from `Generate Key`   |
+| `plainText`        | string     | Yes      | Text to be verified                |
+| `encodedSignature`        | string     | Yes      | Signature to be verified by `plainText` |
