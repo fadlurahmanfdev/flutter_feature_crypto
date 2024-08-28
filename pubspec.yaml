@@ -5,7 +5,6 @@ homepage: https://github.com/fadlurahmanfdev/flutter_feature_crypto
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
