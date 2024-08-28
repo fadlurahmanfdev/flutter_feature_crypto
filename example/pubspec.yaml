@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   flutter_feature_crypto:
-    path: ../../flutter_feature_crypto
+    path: ../
 #  flutter_core_crypto:
 #    git:
 #      url: https://github.com/fadlurahmanfdev/flutter_core_crypto.git
