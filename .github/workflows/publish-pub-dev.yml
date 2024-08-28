@@ -1,4 +1,26 @@
-name: Publish To Pub Dev
+#name: Publish To Pub Dev
+#
+#on:
+#  push:
+#    tags:
+#      - 'pub-dev[0-9]+.[0-9]+.[0-9]+*'
+#
+#jobs:
+#  publish:
+#    permissions:
+#      id-token: write
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout V4
+#        uses: actions/checkout@v4
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          channel: stable
+#          flutter-version: 3.10.0
+#      - run: |
+#          flutter clean && flutter pub get && dart pub publish
+name: Publish to pub.dev
 
 on:
   push:
@@ -9,14 +31,4 @@ jobs:
   publish:
     permissions:
       id-token: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout V4
-        uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version: 3.10.0
-      - run: |
-          flutter clean && flutter pub get && dart pub publish
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
