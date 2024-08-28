@@ -17,6 +17,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: 3.10.6
+          flutter-version: 3.10.0
       - run: |
           flutter clean && flutter pub get && dart pub publish
