@@ -14,7 +14,7 @@ dependencies:
   basic_utils: ^5.7.0
   ed25519_edwards: ^0.3.1
   encrypt: ^5.0.3
-  pointycastle: ^3.9.1
+  pointycastle: ^3.7.4
   rsa_encrypt: ^2.0.0
 
 dev_dependencies:

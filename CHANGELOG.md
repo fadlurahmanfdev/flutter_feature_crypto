@@ -2,6 +2,7 @@
 
 ### Changed
 - update docs
+- change example to homepage
 
 ## 0.0.3
 
