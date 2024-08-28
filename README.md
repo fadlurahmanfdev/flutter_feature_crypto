@@ -137,7 +137,7 @@ cryptoED25519Repository.generateSignature(encodedPrivateKey: key.privateKey, pla
 | Parameter Name     | Type       | Required | Description                             |
 |--------------------|------------|----------|-----------------------------------------|
 | `encodedPrivateKey` | string     | Yes      | private key generated from Generate Key |
-| `plainText`        | string     | Yes      | text want to be encrypted               |
+| `plainText`        | string     | Yes      | text want to be make into a signature   |
 
 #### Verify Signature
 
@@ -152,8 +152,8 @@ final isSignatureVerified = cryptoED25519Repository.verifySignature(
 );
 ```
 
-| Parameter Name     | Type       | Required | Description                            |
-|--------------------|------------|----------|----------------------------------------|
-| `encodedPublicKey` | string     | Yes      | public key generated from Generate Key |
-| `plainText`        | string     | Yes      | text want to be encrypted              |
-| `encodedSignature`        | string     | Yes      | signature from Generate Signature      |
+| Parameter Name     | Type       | Required | Description                                |
+|--------------------|------------|----------|--------------------------------------------|
+| `encodedPublicKey` | string     | Yes      | public key generated from Generate Key     |
+| `plainText`        | string     | Yes      | text want to be verified                   |
+| `encodedSignature`        | string     | Yes      | signature want to be verified by plainText |
