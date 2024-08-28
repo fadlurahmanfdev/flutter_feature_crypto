@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:example/domain/crypto_usecase_impl.dart';
-import 'package:example/presentation/main_page.dart';
-import 'package:example/presentation/main_controller.dart';
+import 'package:example/data/dto/model/feature_model.dart';
+import 'package:example/presentation/widget/feature_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feature_crypto/flutter_feature_crypto.dart';
-import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,23 +17,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
-
-  @override
-  void initState() {
-    super.initState();
-    Get.put(MainController(
-      cryptoUseCase: CryptoUseCaseImpl(
-        cryptoAESRepository: CryptoAESRepositoryImpl(),
-        cryptoRSARepository: CryptoRSARepositoryImpl(),
-        cryptoED25519Repository: CryptoED25519RepositoryIml(),
-      ),
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -56,23 +41,13 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainPage(),
+      home: const MyHomePage(title: 'Flutter Feature Crypto'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -80,102 +55,119 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   late CryptoRSARepository cryptoRSARepository;
+  late CryptoAESRepository cryptoAESRepository;
+  late CryptoED25519Repository cryptoED25519Repository;
+  List<FeatureModel> features = [
+    FeatureModel(
+      title: 'AES Encryption',
+      desc: 'AES Encryption And Decryption',
+      key: 'AES',
+    ),
+    FeatureModel(
+      title: 'RSA Encryption',
+      desc: 'RSA Encryption And Decryption',
+      key: 'RSA',
+    ),
+    FeatureModel(
+      title: 'ED25519 Encryption',
+      desc: 'ED25519 Encryption And Decryption',
+      key: 'ED25519',
+    )
+  ];
 
   @override
   void initState() {
     super.initState();
     cryptoRSARepository = CryptoRSARepositoryImpl();
-
-    final key = cryptoRSARepository.generateKey();
-    final publicKey = key.publicKey;
-    final privateKey = key.privateKey;
-    log("PUBLIC KEY: $publicKey");
-    log("PRIVATE KEY: $privateKey");
-
-    final encrypted = cryptoRSARepository.encrypt(
-      encodedPublicKey: publicKey,
-      plainText: "TES",
-      encoding: CoreCrytoRSAEncoding.pkcs1,
-      digest: CoreCryptoRSADigest.sha1,
-    );
-    log("ENCRYPTED: $encrypted");
-
-    if (encrypted != null) {
-      final decrypted = cryptoRSARepository.decrypt(
-        encodedPrivateKey: privateKey,
-        encryptedText: encrypted,
-        encoding: CoreCrytoRSAEncoding.pkcs1,
-        digest: CoreCryptoRSADigest.sha1,
-      );
-      log("DECRYPTED: $decrypted");
-    }
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    cryptoAESRepository = CryptoAESRepositoryImpl();
+    cryptoED25519Repository = CryptoED25519RepositoryIml();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      appBar: AppBar(title: const Text('Cryptography')),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        itemCount: features.length,
+        itemBuilder: (_, index) {
+          final feature = features[index];
+          return GestureDetector(
+            onTap: () async {
+              switch (feature.key) {
+                case "AES":
+                  final key = cryptoAESRepository.getKey(32);
+                  log("AES KEY: $key");
+                  final ivKey = cryptoAESRepository.getIVKey();
+                  log("IV KEY: $ivKey");
+                  const plainText = 'Passw0rd!';
+                  log("PLAIN TEXT: $plainText");
+                  final encrypted = cryptoAESRepository.encrypt(key: key, ivKey: ivKey, plainText: plainText);
+                  log("ENCRYPTED TEXT: $encrypted");
+                  if (encrypted != null) {
+                    final decrypted = cryptoAESRepository.decrypt(key: key, ivKey: ivKey, encryptedText: encrypted);
+                    log("DECRYPTED TEXT: $decrypted");
+                  }
+                  break;
+                case "RSA":
+                  const plainText = "Passw0rd!";
+                  log("PLAIN TEXT: $plainText");
+                  final key = cryptoRSARepository.generateKey();
+                  log("RSA PRIVATE KEY: ${key.privateKey}");
+                  log("RSA PUBLIC KEY: ${key.publicKey}");
+                  final encrypted = cryptoRSARepository.encrypt(
+                    encodedPublicKey: key.publicKey,
+                    plainText: plainText,
+                    encoding: CoreCrytoRSAEncoding.pkcs1,
+                    digest: CoreCryptoRSADigest.sha256,
+                  );
+                  log("ENCRYPTED TEXT: $encrypted");
+                  if (encrypted != null) {
+                    final decrypted = cryptoRSARepository.decrypt(
+                      encodedPrivateKey: key.privateKey,
+                      encryptedText: encrypted,
+                      encoding: CoreCrytoRSAEncoding.pkcs1,
+                      digest: CoreCryptoRSADigest.sha256,
+                    );
+                    log("DECRYPTED TEXT: $decrypted");
+                  }
+
+                  final signature = cryptoRSARepository.generateSignature(encodedPrivateKey: key.privateKey, plainText: plainText);
+                  log("SIGNATURE: $signature");
+                  if (signature != null) {
+                    final isSignatureVerified = cryptoRSARepository.verifySignature(
+                      encodedPublicKey: key.publicKey,
+                      encodedSignature: signature,
+                      plainText: plainText,
+                    );
+                    log("IS SIGNATURE VERIFIED: $isSignatureVerified");
+                  }
+                  break;
+                case "ED25519":
+                  const plainText = "Passw0rd!";
+                  log("PLAIN TEXT: $plainText");
+                  final key = cryptoED25519Repository.generateKey();
+                  log("PRIVATE KEY: ${key.privateKey}");
+                  log("PUBLIC KEY: ${key.publicKey}");
+                  final signature =
+                  cryptoED25519Repository.generateSignature(encodedPrivateKey: key.privateKey, plainText: plainText);
+                  log("SIGNATURE: $signature");
+                  if (signature != null) {
+                    final isSignatureVerified = cryptoED25519Repository.verifySignature(
+                      encodedPublicKey: key.publicKey,
+                      encodedSignature: signature,
+                      plainText: plainText,
+                    );
+                    log("IS SIGNATURE VERIFIED: $isSignatureVerified");
+                  }
+                  break;
+              }
+            },
+            child: ItemFeatureWidget(feature: feature),
+          );
+        },
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
