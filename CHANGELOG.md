@@ -1,4 +1,4 @@
-## 0.0.4
+## 0.0.5
 
 ### Changed
 - change dependency sdk flutter version
