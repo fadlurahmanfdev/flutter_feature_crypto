@@ -43,10 +43,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
       final iv = IV.fromUtf8(ivKey);
       return encrypter.encrypt(plainText, iv: iv).base64;
     } on Error catch (e, s) {
-      log("failed encrypt on error encrypt: $e, $s");
+      log("failed encrypt on error: $e, $s");
       return null;
     } on Exception catch (e, s) {
-      log("failed encrypt on exception encrypt: $e, $s");
+      log("failed encrypt on exception: $e, $s");
       return null;
     }
   }
@@ -63,10 +63,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
       final iv = IV.fromUtf8(ivKey);
       return encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
     } on Error catch (e, s) {
-      log("failed decrypt on error encrypt: $e, $s");
+      log("failed decrypt on error: $e, $s");
       return null;
     } on Exception catch (e, s) {
-      log("failed decrypt on exception encrypt: $e, $s");
+      log("failed decrypt on exception: $e, $s");
       return null;
     }
   }

@@ -1,6 +1,11 @@
 ## 0.0.4
 
 ### Changed
+- change dependency sdk flutter version
+
+## 0.0.4
+
+### Changed
 - update docs
 - change example to homepage
 

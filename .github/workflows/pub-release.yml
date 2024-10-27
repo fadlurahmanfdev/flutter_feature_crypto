@@ -1,0 +1,58 @@
+name: Create Release & Publish Pub Dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: pub-dev
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout V3
+        uses: actions/checkout@v3
+      - name: Setup Version
+        id: setup
+        run: |
+          echo "TAG VERSION: $GITHUB_REF_NAME"
+          echo "RELEASE VERSION: ${GITHUB_REF_NAME#v}"
+          echo "::set-output name=release_name::${GITHUB_REF_NAME#v}"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ steps.setup.outputs.release_name }}
+          draft: false
+          prerelease: false
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.19.5
+      - name: Check Flutter Version
+        run: |
+          flutter doctor -v
+          flutter --version
+      - name: Check Flutter Version
+        run: |
+          flutter test --coverage
+      - name: Publish To Pub Dev
+        run: |
+          mkdir -p $HOME/.config/dart
+          cat <<EOF > $HOME/.config/dart/pub-credentials.json
+          {
+            "accessToken": "${{ secrets.PUB_ACCESS_TOKEN }}",
+            "refreshToken": "${{ secrets.PUB_REFRESH_TOKEN }}",
+            "idToken": "${{ secrets.PUB_ID_TOKEN }}",
+            "tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+            "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+            "expiration": ${{ secrets.PUB_EXPIRATION }}
+          }
+          EOF
+          dart pub publish -f
+          
