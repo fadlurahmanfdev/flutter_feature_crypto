@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
@@ -35,7 +34,7 @@ class CryptoED25519RepositoryIml extends CryptoED25519Repository {
   }) {
     try {
       final privateKey = getPrivateKey(encodedPrivateKey);
-      return base64.encode(ed.sign(privateKey, utf8.encode(plainText) as Uint8List));
+      return base64.encode(ed.sign(privateKey, utf8.encode(plainText)));
     } on Error catch (e, s) {
       log("failed generateSignature on error: $e, $s");
       return null;
@@ -55,7 +54,7 @@ class CryptoED25519RepositoryIml extends CryptoED25519Repository {
       final publicKey = getPublicKeyFromPrivateKey(encodedPrivateKey);
       return ed.verify(
         publicKey,
-        utf8.encode(plainText) as Uint8List,
+        utf8.encode(plainText),
         base64.decode(encodedSignature),
       );
     } on Error catch (e, s) {
@@ -77,7 +76,7 @@ class CryptoED25519RepositoryIml extends CryptoED25519Repository {
       final publicKey = getPublicKey(encodedPublicKey);
       return ed.verify(
         publicKey,
-        utf8.encode(plainText) as Uint8List,
+        utf8.encode(plainText),
         base64.decode(encodedSignature),
       );
     } on Error catch (e, s) {
