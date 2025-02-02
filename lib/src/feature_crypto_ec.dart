@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
-import 'package:pointycastle/pointycastle.dart';
 import 'package:cryptography/cryptography.dart';
 
 class FeatureCryptoEC {
