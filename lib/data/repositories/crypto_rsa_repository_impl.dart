@@ -7,9 +7,9 @@ import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
 import 'package:flutter_feature_crypto/data/enum/rsa_digest.dart';
 import 'package:flutter_feature_crypto/data/enum/rsa_encoding.dart';
 import 'package:flutter_feature_crypto/data/repositories/crypto_rsa_repository.dart';
-import 'package:pointycastle/src/platform_check/platform_check.dart';
 import "package:pointycastle/export.dart" hide RSASigner;
 import 'package:basic_utils/basic_utils.dart';
+import 'package:flutter_feature_crypto/pointycastle.dart';
 
 class CryptoRSARepositoryImpl extends CryptoRSARepository {
   RSAEncoding convertEncoding(CoreCrytoRSAEncoding encoding) {
