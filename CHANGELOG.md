@@ -1,3 +1,8 @@
+## 0.0.6
+
+### Add
+- add key exchange implementation
+
 ## 0.0.5
 
 ### Changed

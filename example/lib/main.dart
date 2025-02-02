@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late CryptoRSARepository cryptoRSARepository;
   late CryptoAESRepository cryptoAESRepository;
   late CryptoED25519Repository cryptoED25519Repository;
+  late FeatureCryptoEC featureCryptoEC;
   List<FeatureModel> features = [
     FeatureModel(
       title: 'AES Encryption',
@@ -73,7 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'ED25519 Encryption',
       desc: 'ED25519 Encryption And Decryption',
       key: 'ED25519',
-    )
+    ),
+    FeatureModel(
+      title: 'Key Exchange ECDH',
+      desc: 'Key Exchange ECDH',
+      key: 'KEY_EXCHANGE_ECDH',
+    ),
   ];
 
   @override
@@ -82,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     cryptoRSARepository = CryptoRSARepositoryImpl();
     cryptoAESRepository = CryptoAESRepositoryImpl();
     cryptoED25519Repository = CryptoED25519RepositoryIml();
+    featureCryptoEC = FeatureCryptoEC();
   }
 
   @override
@@ -161,6 +168,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                     log("IS SIGNATURE VERIFIED: $isSignatureVerified");
                   }
+                  break;
+                case "KEY_EXCHANGE_ECDH":
+                  final bobKeyPair = await featureCryptoEC.generateKeyPair();
+                  log("BOB PRIVATE KEY: ${bobKeyPair.privateKey}");
+                  log("BOB PUBLIC KEY: ${bobKeyPair.publicKey}");
+                  final aliceKeyPair = await featureCryptoEC.generateKeyPair();
+                  log("ALICE PRIVATE KEY: ${aliceKeyPair.privateKey}");
+                  log("ALICE PUBLIC KEY: ${aliceKeyPair.publicKey}");
+                  final agreement = await featureCryptoEC.generateSharedSecret(encodedPrivateKey: bobKeyPair.privateKey, peerEncodedPublicKey: aliceKeyPair.publicKey);
+                  log("AGREEMENT: $agreement");
                   break;
               }
             },
