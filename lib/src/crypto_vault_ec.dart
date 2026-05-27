@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter_feature_crypto/data/dto/model/crypto_key.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:crypto_vault/data/dto/model/crypto_key.dart';
 
-class FeatureCryptoEC {
+class CryptoVaultEC {
   Future<CryptoKey> generateKeyPair({String? curve}) async {
     final algorithm = X25519();
     final keyPair = await algorithm.newKeyPair();

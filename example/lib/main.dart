@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:example/data/dto/model/feature_model.dart';
 import 'package:example/presentation/widget/feature_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feature_crypto/flutter_feature_crypto.dart';
+import 'package:crypto_vault/crypto_vault.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late CryptoRSARepository cryptoRSARepository;
   late CryptoAESRepository cryptoAESRepository;
   late CryptoED25519Repository cryptoED25519Repository;
-  late FeatureCryptoEC featureCryptoEC;
+  late CryptoVaultEC cryptoVaultEC;
   List<FeatureModel> features = [
     FeatureModel(
       title: 'AES Encryption',
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     cryptoRSARepository = CryptoRSARepositoryImpl();
     cryptoAESRepository = CryptoAESRepositoryImpl();
     cryptoED25519Repository = CryptoED25519RepositoryIml();
-    featureCryptoEC = FeatureCryptoEC();
+    cryptoVaultEC = CryptoVaultEC();
   }
 
   @override
@@ -170,13 +170,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   break;
                 case "KEY_EXCHANGE_ECDH":
-                  final bobKeyPair = await featureCryptoEC.generateKeyPair();
+                  final bobKeyPair = await cryptoVaultEC.generateKeyPair();
                   log("BOB PRIVATE KEY: ${bobKeyPair.privateKey}");
                   log("BOB PUBLIC KEY: ${bobKeyPair.publicKey}");
-                  final aliceKeyPair = await featureCryptoEC.generateKeyPair();
+                  final aliceKeyPair = await cryptoVaultEC.generateKeyPair();
                   log("ALICE PRIVATE KEY: ${aliceKeyPair.privateKey}");
                   log("ALICE PUBLIC KEY: ${aliceKeyPair.publicKey}");
-                  final agreement = await featureCryptoEC.generateSharedSecret(encodedPrivateKey: bobKeyPair.privateKey, peerEncodedPublicKey: aliceKeyPair.publicKey);
+                  final agreement = await cryptoVaultEC.generateSharedSecret(encodedPrivateKey: bobKeyPair.privateKey, peerEncodedPublicKey: aliceKeyPair.publicKey);
                   log("AGREEMENT: $agreement");
                   break;
               }

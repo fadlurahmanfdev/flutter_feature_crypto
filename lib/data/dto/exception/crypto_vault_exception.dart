@@ -1,8 +1,8 @@
-class FeatureCryptoException implements Exception {
+class CryptoVaultException implements Exception {
   String code;
   String message;
 
-  FeatureCryptoException({
+  CryptoVaultException({
     required this.code,
     required this.message,
   });
