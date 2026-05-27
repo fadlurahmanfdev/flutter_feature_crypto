@@ -6,6 +6,10 @@ import 'package:example/presentation/widget/feature_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  // Enable this if you want nullable-returning APIs to throw CryptoVaultException
+  // instead of returning null/false. Useful during development and debugging.
+  CryptoVaultConfig.throwOnError = true;
+
   runApp(const MyApp());
 }
 
@@ -88,97 +92,116 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () async {
               switch (feature.key) {
                 case 'AES':
-                  final key = cryptoVaultAes.getKey(32);
-                  log('AES KEY: $key');
-                  final ivKey = cryptoVaultAes.getIVKey();
-                  log('IV KEY: $ivKey');
-                  const plainText = 'Passw0rd!';
-                  log('PLAIN TEXT: $plainText');
-                  final encrypted = cryptoVaultAes.encrypt(
-                    key: key,
-                    ivKey: ivKey,
-                    plainText: plainText,
-                  );
-                  log('ENCRYPTED TEXT: $encrypted');
-                  if (encrypted != null) {
-                    final decrypted = cryptoVaultAes.decrypt(
+                  try {
+                    final key = cryptoVaultAes.getKey(32);
+                    log('AES KEY: $key');
+                    final ivKey = cryptoVaultAes.getIVKey();
+                    log('IV KEY: $ivKey');
+                    const plainText = 'Passw0rd!';
+                    log('PLAIN TEXT: $plainText');
+                    final encrypted = cryptoVaultAes.encrypt(
                       key: key,
                       ivKey: ivKey,
-                      encryptedText: encrypted,
+                      plainText: plainText,
                     );
-                    log('DECRYPTED TEXT: $decrypted');
+                    log('ENCRYPTED TEXT: $encrypted');
+                    if (encrypted != null) {
+                      final decrypted = cryptoVaultAes.decrypt(
+                        key: key,
+                        ivKey: ivKey,
+                        encryptedText: encrypted,
+                      );
+                      log('DECRYPTED TEXT: $decrypted');
+                    }
+                  } on CryptoVaultException catch (e) {
+                    log(e.toString());
                   }
                   break;
                 case 'RSA':
-                  const plainText = 'Passw0rd!';
-                  log('PLAIN TEXT: $plainText');
-                  final key = cryptoVaultRsa.generateKey();
-                  log('RSA PRIVATE KEY: ${key.privateKey}');
-                  log('RSA PUBLIC KEY: ${key.publicKey}');
-                  final encrypted = cryptoVaultRsa.encrypt(
-                    encodedPublicKey: key.publicKey,
-                    plainText: plainText,
-                    encoding: CryptoVaultRsaEncoding.pkcs1,
-                    digest: CryptoVaultRsaDigest.sha256,
-                  );
-                  log('ENCRYPTED TEXT: $encrypted');
-                  if (encrypted != null) {
-                    final decrypted = cryptoVaultRsa.decrypt(
-                      encodedPrivateKey: key.privateKey,
-                      encryptedText: encrypted,
+                  try {
+                    const plainText = 'Passw0rd!';
+                    log('PLAIN TEXT: $plainText');
+                    final key = cryptoVaultRsa.generateKey();
+                    log('RSA PRIVATE KEY: ${key.privateKey}');
+                    log('RSA PUBLIC KEY: ${key.publicKey}');
+                    final encrypted = cryptoVaultRsa.encrypt(
+                      encodedPublicKey: key.publicKey,
+                      plainText: plainText,
                       encoding: CryptoVaultRsaEncoding.pkcs1,
                       digest: CryptoVaultRsaDigest.sha256,
                     );
-                    log('DECRYPTED TEXT: $decrypted');
-                  }
+                    log('ENCRYPTED TEXT: $encrypted');
+                    if (encrypted != null) {
+                      final decrypted = cryptoVaultRsa.decrypt(
+                        encodedPrivateKey: key.privateKey,
+                        encryptedText: encrypted,
+                        encoding: CryptoVaultRsaEncoding.pkcs1,
+                        digest: CryptoVaultRsaDigest.sha256,
+                      );
+                      log('DECRYPTED TEXT: $decrypted');
+                    }
 
-                  final signature = cryptoVaultRsa.generateSignature(
-                    encodedPrivateKey: key.privateKey,
-                    plainText: plainText,
-                  );
-                  log('SIGNATURE: $signature');
-                  if (signature != null) {
-                    final isSignatureVerified = cryptoVaultRsa.verifySignature(
-                      encodedPublicKey: key.publicKey,
-                      encodedSignature: signature,
+                    final signature = cryptoVaultRsa.generateSignature(
+                      encodedPrivateKey: key.privateKey,
                       plainText: plainText,
                     );
-                    log('IS SIGNATURE VERIFIED: $isSignatureVerified');
+                    log('SIGNATURE: $signature');
+                    if (signature != null) {
+                      final isSignatureVerified =
+                          cryptoVaultRsa.verifySignature(
+                        encodedPublicKey: key.publicKey,
+                        encodedSignature: signature,
+                        plainText: plainText,
+                      );
+                      log('IS SIGNATURE VERIFIED: $isSignatureVerified');
+                    }
+                  } on CryptoVaultException catch (e) {
+                    log(e.toString());
                   }
                   break;
                 case 'ED25519':
-                  const plainText = 'Passw0rd!';
-                  log('PLAIN TEXT: $plainText');
-                  final key = cryptoVaultEd25519.generateKey();
-                  log('PRIVATE KEY: ${key.privateKey}');
-                  log('PUBLIC KEY: ${key.publicKey}');
-                  final signature = cryptoVaultEd25519.generateSignature(
-                    encodedPrivateKey: key.privateKey,
-                    plainText: plainText,
-                  );
-                  log('SIGNATURE: $signature');
-                  if (signature != null) {
-                    final isSignatureVerified =
-                        cryptoVaultEd25519.verifySignature(
-                      encodedPublicKey: key.publicKey,
-                      encodedSignature: signature,
+                  try {
+                    const plainText = 'Passw0rd!';
+                    log('PLAIN TEXT: $plainText');
+                    final key = cryptoVaultEd25519.generateKey();
+                    log('PRIVATE KEY: ${key.privateKey}');
+                    log('PUBLIC KEY: ${key.publicKey}');
+                    final signature = cryptoVaultEd25519.generateSignature(
+                      encodedPrivateKey: key.privateKey,
                       plainText: plainText,
                     );
-                    log('IS SIGNATURE VERIFIED: $isSignatureVerified');
+                    log('SIGNATURE: $signature');
+                    if (signature != null) {
+                      final isSignatureVerified =
+                          cryptoVaultEd25519.verifySignature(
+                        encodedPublicKey: key.publicKey,
+                        encodedSignature: signature,
+                        plainText: plainText,
+                      );
+                      log('IS SIGNATURE VERIFIED: $isSignatureVerified');
+                    }
+                  } on CryptoVaultException catch (e) {
+                    log(e.toString());
                   }
                   break;
                 case 'KEY_EXCHANGE_ECDH':
-                  final bobKeyPair = await cryptoVaultEc.generateKeyPair();
-                  log('BOB PRIVATE KEY: ${bobKeyPair.privateKey}');
-                  log('BOB PUBLIC KEY: ${bobKeyPair.publicKey}');
-                  final aliceKeyPair = await cryptoVaultEc.generateKeyPair();
-                  log('ALICE PRIVATE KEY: ${aliceKeyPair.privateKey}');
-                  log('ALICE PUBLIC KEY: ${aliceKeyPair.publicKey}');
-                  final agreement = await cryptoVaultEc.generateSharedSecret(
-                    encodedPrivateKey: bobKeyPair.privateKey,
-                    peerEncodedPublicKey: aliceKeyPair.publicKey,
-                  );
-                  log('AGREEMENT: $agreement');
+                  try {
+                    final bobKeyPair = await cryptoVaultEc.generateKeyPair();
+                    log('BOB PRIVATE KEY: ${bobKeyPair.privateKey}');
+                    log('BOB PUBLIC KEY: ${bobKeyPair.publicKey}');
+                    final aliceKeyPair =
+                        await cryptoVaultEc.generateKeyPair();
+                    log('ALICE PRIVATE KEY: ${aliceKeyPair.privateKey}');
+                    log('ALICE PUBLIC KEY: ${aliceKeyPair.publicKey}');
+                    final agreement =
+                        await cryptoVaultEc.generateSharedSecret(
+                      encodedPrivateKey: bobKeyPair.privateKey,
+                      peerEncodedPublicKey: aliceKeyPair.publicKey,
+                    );
+                    log('AGREEMENT: $agreement');
+                  } on CryptoVaultException catch (e) {
+                    log(e.toString());
+                  }
                   break;
               }
             },

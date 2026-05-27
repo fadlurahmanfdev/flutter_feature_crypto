@@ -1,6 +1,7 @@
 library crypto_vault;
 
 export 'src/crypto_vault_aes.dart';
+export 'src/crypto_vault_config.dart';
 export 'src/crypto_vault_ed25519.dart';
 export 'src/crypto_vault_ec.dart';
 export 'src/crypto_vault_rsa.dart';

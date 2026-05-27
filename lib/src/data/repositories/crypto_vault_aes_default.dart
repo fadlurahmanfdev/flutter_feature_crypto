@@ -24,9 +24,10 @@ class CryptoVaultAesDefault
     if (size == 16 || size == 24 || size == 32) {
       return _generateRandomKey(size);
     }
-    throw const CryptoVaultException(
+    throw CryptoVaultException(
       code: 'SIZE_NOT_VALID',
       message: 'Size must be 16/24/32',
+      trace: StackTrace.current.toString(),
     );
   }
 

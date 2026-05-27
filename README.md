@@ -53,7 +53,10 @@ final key = cryptoVaultAes.getKey(32);
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `size` | int | Yes | Must be 16, 24, or 32. Otherwise throws `CryptoVaultException`. |
+| `size` | int | Yes | Must be 16, 24, or 32. Otherwise throws `CryptoVaultException` with code `SIZE_NOT_VALID`. |
+
+**Possible exceptions**
+- `CryptoVaultException(code: "SIZE_NOT_VALID")`: invalid key size.
 
 ### Get IV key
 
@@ -78,6 +81,10 @@ final encrypted = cryptoVaultAes.encrypt(
 | `plainText` | String | Yes | Text to encrypt |
 | `mode` | AESMode | No | Default `AESMode.cbc` |
 
+**Possible exceptions**
+- By default: returns `null` on failure.
+- If `CryptoVaultConfig.throwOnError = true`: throws `CryptoVaultException(code: "OPERATION_FAILED")` with `trace`.
+
 ### Decrypt
 
 ```dart
@@ -87,6 +94,10 @@ final decrypted = cryptoVaultAes.decrypt(
   encryptedText: encrypted,
 );
 ```
+
+**Possible exceptions**
+- By default: returns `null` on failure.
+- If `CryptoVaultConfig.throwOnError = true`: throws `CryptoVaultException(code: "OPERATION_FAILED")` with `trace`.
 
 ## RSA
 
@@ -108,6 +119,10 @@ final encrypted = cryptoVaultRsa.encrypt(
 );
 ```
 
+**Possible exceptions**
+- By default: returns `null` on failure.
+- If `CryptoVaultConfig.throwOnError = true`: throws `CryptoVaultException(code: "OPERATION_FAILED")` with `trace`.
+
 ### Decrypt
 
 ```dart
@@ -118,6 +133,10 @@ final decrypted = cryptoVaultRsa.decrypt(
   digest: CryptoVaultRsaDigest.sha256,
 );
 ```
+
+**Possible exceptions**
+- By default: returns `null` on failure.
+- If `CryptoVaultConfig.throwOnError = true`: throws `CryptoVaultException(code: "OPERATION_FAILED")` with `trace`.
 
 ### Sign and verify
 
@@ -133,6 +152,10 @@ final verified = cryptoVaultRsa.verifySignature(
   plainText: plainText,
 );
 ```
+
+**Possible exceptions**
+- `generateSignature`: by default returns `null` on failure; with `CryptoVaultConfig.throwOnError = true` throws `CryptoVaultException(code: "OPERATION_FAILED")`.
+- `verifySignature`: by default returns `false` on failure; with `CryptoVaultConfig.throwOnError = true` throws `CryptoVaultException(code: "OPERATION_FAILED")`.
 
 ## Ed25519
 
@@ -158,6 +181,10 @@ final verified = cryptoVaultEd25519.verifySignature(
 );
 ```
 
+**Possible exceptions**
+- `generateSignature`: by default returns `null` on failure; with `CryptoVaultConfig.throwOnError = true` throws `CryptoVaultException(code: "OPERATION_FAILED")`.
+- `verifySignature` / `verifySignatureUsingPrivateKey`: by default returns `false` on failure; with `CryptoVaultConfig.throwOnError = true` throws `CryptoVaultException(code: "OPERATION_FAILED")`.
+
 ## EC (X25519 key exchange)
 
 ### Generate key pair
@@ -167,6 +194,9 @@ final cryptoVaultEc = CryptoVaultEc();
 final key = await cryptoVaultEc.generateKeyPair();
 ```
 
+**Possible exceptions**
+- Always throws `CryptoVaultException(code: "EC_GENERATE_KEYPAIR_FAILED")` on failure (includes `trace`).
+
 ### Shared secret
 
 ```dart
@@ -174,6 +204,25 @@ final secret = await cryptoVaultEc.generateSharedSecret(
   encodedPrivateKey: 'our encoded private key',
   peerEncodedPublicKey: 'peer encoded public key',
 );
+```
+
+**Possible exceptions**
+- Always throws `CryptoVaultException(code: "EC_SHARED_SECRET_FAILED")` on failure (includes `trace`).
+
+## Debugging failures
+
+If you want failures to be **throwable** (instead of getting `null`/`false`), enable:
+
+```dart
+CryptoVaultConfig.throwOnError = true;
+```
+
+You can also observe failures without throwing:
+
+```dart
+CryptoVaultConfig.onError = (e) {
+  // Send to crash reporting, logs, etc.
+};
 ```
 
 ## Public types
