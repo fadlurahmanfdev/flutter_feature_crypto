@@ -1,6 +1,6 @@
 name: crypto_vault
 description: "Flutter library that provides a cryptography solution using a repository implementation. This library simplifies the process of handling cryptographic functions such as encryption, decryption, hashing, and digital signatures by leveraging a structured repository pattern. It is designed to be easy to integrate into any Flutter project, ensuring secure data handling and storage with a flexible and scalable architecture."
-version: 0.0.6
+version: 0.1.0
 homepage: https://github.com/fadlurahmanfdev/crypto_vault
 
 environment:

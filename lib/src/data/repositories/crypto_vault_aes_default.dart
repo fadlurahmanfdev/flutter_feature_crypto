@@ -1,16 +1,20 @@
-import 'dart:developer';
 import 'dart:math' hide log;
-import 'package:encrypt/encrypt.dart';
-import 'package:crypto_vault/data/dto/exception/crypto_vault_exception.dart';
-import 'crypto_aes_repository.dart';
 
-class CryptoAESRepositoryImpl extends CryptoAESRepository {
-  String generateRandomKey(int length) {
-    const mChars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+import 'package:crypto_vault/src/crypto_vault_aes.dart';
+import 'package:crypto_vault/src/data/internal/crypto_vault_safe_operations.dart';
+import 'package:crypto_vault/src/domain/exceptions/crypto_vault_exception.dart';
+import 'package:encrypt/encrypt.dart';
+
+class CryptoVaultAesDefault
+    with CryptoVaultSafeOperations
+    implements CryptoVaultAes {
+  String _generateRandomKey(int length) {
+    const chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     return String.fromCharCodes(
       Iterable.generate(
         length,
-        (_) => mChars.codeUnitAt(Random.secure().nextInt(mChars.length)),
+        (_) => chars.codeUnitAt(Random.secure().nextInt(chars.length)),
       ),
     );
   }
@@ -18,18 +22,16 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
   @override
   String getKey(int size) {
     if (size == 16 || size == 24 || size == 32) {
-      return generateRandomKey(size);
+      return _generateRandomKey(size);
     }
-    throw CryptoVaultException(
+    throw const CryptoVaultException(
       code: 'SIZE_NOT_VALID',
       message: 'Size must be 16/24/32',
     );
   }
 
   @override
-  String getIVKey() {
-    return generateRandomKey(16);
-  }
+  String getIVKey() => _generateRandomKey(16);
 
   @override
   String? encrypt({
@@ -38,17 +40,11 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String plainText,
     AESMode mode = AESMode.cbc,
   }) {
-    try {
+    return safeStringOperation('encrypt', () {
       final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.encrypt(plainText, iv: iv).base64;
-    } on Error catch (e, s) {
-      log("failed encrypt on error: $e, $s");
-      return null;
-    } on Exception catch (e, s) {
-      log("failed encrypt on exception: $e, $s");
-      return null;
-    }
+    });
   }
 
   @override
@@ -58,16 +54,10 @@ class CryptoAESRepositoryImpl extends CryptoAESRepository {
     required String encryptedText,
     AESMode mode = AESMode.cbc,
   }) {
-    try {
+    return safeStringOperation('decrypt', () {
       final encrypter = Encrypter(AES(Key.fromUtf8(key), mode: mode));
       final iv = IV.fromUtf8(ivKey);
       return encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv: iv);
-    } on Error catch (e, s) {
-      log("failed decrypt on error: $e, $s");
-      return null;
-    } on Exception catch (e, s) {
-      log("failed decrypt on exception: $e, $s");
-      return null;
-    }
+    });
   }
 }
