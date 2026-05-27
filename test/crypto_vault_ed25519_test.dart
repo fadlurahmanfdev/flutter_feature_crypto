@@ -5,7 +5,14 @@ Future<void> cryptoVaultEd25519Test() async {
   late CryptoVaultEd25519 cryptoVaultEd25519;
   group('ED25519 Test', () {
     setUp(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
       cryptoVaultEd25519 = CryptoVaultEd25519();
+    });
+
+    tearDown(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
     });
 
     test('generate ed25519 key success', () {
@@ -98,6 +105,34 @@ Future<void> cryptoVaultEd25519Test() async {
         plainText: plainText,
       );
       expect(isVerify, false);
+    });
+
+    test('throwOnError false returns null on ed25519 signature failure', () {
+      CryptoVaultConfig.throwOnError = false;
+      final key = cryptoVaultEd25519.generateKey();
+      final signature = cryptoVaultEd25519.generateSignature(
+        encodedPrivateKey: key.publicKey,
+        plainText: 'plain',
+      );
+      expect(signature, null);
+    });
+
+    test('throwOnError true throws on ed25519 signature failure', () {
+      CryptoVaultConfig.throwOnError = true;
+      final key = cryptoVaultEd25519.generateKey();
+      expect(
+        () => cryptoVaultEd25519.generateSignature(
+          encodedPrivateKey: key.publicKey,
+          plainText: 'plain',
+        ),
+        throwsA(
+          isA<CryptoVaultException>().having(
+            (e) => e.code,
+            'code',
+            'OPERATION_FAILED',
+          ),
+        ),
+      );
     });
   });
 }
