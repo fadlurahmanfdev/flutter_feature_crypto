@@ -1,7 +1,7 @@
 import 'package:crypto_vault/crypto_vault.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> cryptoVaultAesTest() async {
+Future<void> main() async {
   late CryptoVaultAes cryptoVaultAes;
   group('AES Test', () {
     setUp(() {

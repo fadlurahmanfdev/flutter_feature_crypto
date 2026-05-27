@@ -1,5 +1,5 @@
-fvm use 3.19.5 && fvm global 3.19.5  \
+fvm use 3.41.6 && fvm global 3.41.6  \
   && flutter clean && flutter pub get \
-  && cd example && fvm use 3.10.6 && fvm global 3.10.6 \
+  && cd example && fvm use 3.41.6 && fvm global 3.41.6 \
   && flutter clean && flutter pub get \
   && cd ..
