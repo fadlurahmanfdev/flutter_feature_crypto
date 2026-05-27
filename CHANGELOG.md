@@ -1,3 +1,11 @@
+## 0.1.0
+
+### Changed
+- refactor to clean architecture under `lib/src`
+- rename public APIs from `*Repository` to `CryptoVault*` (`CryptoVaultAes`, `CryptoVaultRsa`, etc.)
+- rename enums to `CryptoVaultRsaEncoding` and `CryptoVaultRsaDigest`
+- add `CryptoVaultSignature` base contract for RSA and Ed25519 signing
+
 ## 0.0.6
 
 ### Add

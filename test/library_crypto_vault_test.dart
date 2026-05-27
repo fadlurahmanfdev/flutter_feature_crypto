@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'crypto_aes_repository_impl.dart';
-import 'crypto_ed25519_repository_impl.dart';
-import 'crypto_rsa_repository_impl.dart';
+import 'crypto_vault_aes_test.dart';
+import 'crypto_vault_ed25519_test.dart';
+import 'crypto_vault_rsa_test.dart';
 
 Future<void> main() async {
-  unawaited(cryptoAesRepositoryImpl());
-  unawaited(cryptoED25519RepositoryImpl());
-  unawaited(cryptoRSARepositoryImpl());
+  unawaited(cryptoVaultAesTest());
+  unawaited(cryptoVaultEd25519Test());
+  unawaited(cryptoVaultRsaTest());
 }

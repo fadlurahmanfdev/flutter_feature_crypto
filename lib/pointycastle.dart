@@ -1,1 +1,0 @@
-export 'package:pointycastle/src/platform_check/platform_check.dart';

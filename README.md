@@ -1,8 +1,10 @@
-# Overview
+# Crypto Vault
+
+Flutter cryptography library with a clean architecture layout. Use one import for AES, RSA, Ed25519, and X25519 key exchange.
 
 ## Package
 
-Add this to your `pubspec.yaml`:
+Add to `pubspec.yaml`:
 
 ```yaml
 dependencies:
@@ -15,186 +17,175 @@ Import:
 import 'package:crypto_vault/crypto_vault.dart';
 ```
 
-Flutter library that provides a cryptography solution using a repository implementation. This library simplifies the process of handling cryptographic functions such as encryption, decryption, hashing, and digital signatures by leveraging a structured repository pattern. It is designed to be easy to integrate into any Flutter project, ensuring secure data handling and storage with a flexible and scalable architecture.
+## Architecture
 
-## Methods
-### AES
-
-#### Generate Key
-
-Generate AES Key
-
-
-```dart
-final key = cryptoAESRepository.getKey(32);
+```
+lib/
+  crypto_vault.dart          # public exports only
+  src/
+    crypto_vault_aes.dart    # public API (domain contract)
+    crypto_vault_rsa.dart
+    crypto_vault_ed25519.dart
+    crypto_vault_ec.dart
+    domain/                  # entities, enums, shared contracts
+    data/                    # default implementations
 ```
 
-| Parameter Name | Type       | Required | Description                                                                       |
-|----------------|------------|----------|-----------------------------------------------------------------------------------|
-| `size`         | int        | Yes      | Possible values are 16, 24, or 32. Otherwise, it will throw `CoreCryptoException` |
+Public APIs use `CryptoVault{Algorithm}` classes with factory constructors that resolve to default implementations in `src/data/repositories/`. RSA and Ed25519 share signing methods via `CryptoVaultSignature`.
 
-#### Get IV Key
-
-Generate Initialization Vector Key
-
+## Quick start
 
 ```dart
-final ivKey = cryptoAESRepository.getIVKey();
+final aes = CryptoVaultAes();
+final rsa = CryptoVaultRsa();
+final ed25519 = CryptoVaultEd25519();
+final ec = CryptoVaultEc();
 ```
 
-#### Encrypt
+## AES
 
-Encrypt plain text & return base64
-
+### Generate key
 
 ```dart
-final encrypted = cryptoAESRepository.encrypt(key: key, ivKey: ivKey, plainText: plainText);
+final cryptoVaultAes = CryptoVaultAes();
+final key = cryptoVaultAes.getKey(32);
 ```
 
-| Parameter Name | Type       | Required  | Description                                     |
-|----------------|------------|-----------|-------------------------------------------------|
-| `key`          | string     | Yes       | Key generated from `Generate Key`               |
-| `ivKey`        | string     | Yes       | Vector key generated from `Get IV Key`          |
-| `plainText`    | string     | Yes       | Text to be encrypted                            |
-| `mode`         | AESMode    | no        | AES Encryption mode, default is `AESMode.cbc`   |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `size` | int | Yes | Must be 16, 24, or 32. Otherwise throws `CryptoVaultException`. |
 
-#### Decrypt
-
-Decrypt encrypted text
-
+### Get IV key
 
 ```dart
-final decrypted = cryptoAESRepository.decrypt(key: key, ivKey: ivKey, encryptedText: encrypted);
+final ivKey = cryptoVaultAes.getIVKey();
 ```
 
-| Parameter Name   | Type       | Required | Description                                   |
-|------------------|------------|----------|-----------------------------------------------|
-| `key`            | string     | Yes      | Key generated from `Generate Key`             |
-| `ivKey`          | string     | Yes      | Vector key generated from `Get IV Key`        |
-| `encryptedText`  | string     | Yes      | Encrypted text                                |
-| `mode`           | AESMode    | no       | AES Encryption mode, default is `AESMode.cbc` |
-
-### RSA
-
-#### Generate Key
-
-Generate RSA Key
-
+### Encrypt
 
 ```dart
-final key = cryptoRSARepository.generateKey();
-```
-
-#### Encrypt
-
-Encrypt plain text and return CryptoKey
-
-
-```dart
-final encrypted = cryptoRSARepository.encrypt(
-  encodedPublicKey: key.publicKey,
+final encrypted = cryptoVaultAes.encrypt(
+  key: key,
+  ivKey: ivKey,
   plainText: plainText,
-  encoding: CoreCrytoRSAEncoding.pkcs1,
-  digest: CoreCryptoRSADigest.sha256,
 );
 ```
 
-| Parameter Name     | Type                 | Required | Description                              |
-|--------------------|----------------------|----------|------------------------------------------|
-| `encodedPublicKey` | string               | Yes      | Public key generated from `Generate Key` |
-| `encoding`         | CoreCrytoRSAEncoding | Yes      | -                                        |
-| `plainText`        | string               | Yes      | Text to be encrypted                     |
-| `digest`           | CoreCryptoRSADigest  | yes      | -                                        |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | String | Yes | Key from `getKey` |
+| `ivKey` | String | Yes | IV from `getIVKey` |
+| `plainText` | String | Yes | Text to encrypt |
+| `mode` | AESMode | No | Default `AESMode.cbc` |
 
-#### Decrypt
-
-Decrypt encrypted text
-
+### Decrypt
 
 ```dart
-final decrypted = cryptoRSARepository.decrypt(
+final decrypted = cryptoVaultAes.decrypt(
+  key: key,
+  ivKey: ivKey,
+  encryptedText: encrypted,
+);
+```
+
+## RSA
+
+### Generate key
+
+```dart
+final cryptoVaultRsa = CryptoVaultRsa();
+final key = cryptoVaultRsa.generateKey();
+```
+
+### Encrypt
+
+```dart
+final encrypted = cryptoVaultRsa.encrypt(
+  encodedPublicKey: key.publicKey,
+  plainText: plainText,
+  encoding: CryptoVaultRsaEncoding.pkcs1,
+  digest: CryptoVaultRsaDigest.sha256,
+);
+```
+
+### Decrypt
+
+```dart
+final decrypted = cryptoVaultRsa.decrypt(
   encodedPrivateKey: key.privateKey,
   encryptedText: encrypted,
-  encoding: CoreCrytoRSAEncoding.pkcs1,
-  digest: CoreCryptoRSADigest.sha256,
+  encoding: CryptoVaultRsaEncoding.pkcs1,
+  digest: CryptoVaultRsaDigest.sha256,
 );
 ```
 
-| Parameter Name       | Type                 | Required | Description                              |
-|----------------------|----------------------|----------|------------------------------------------|
-| `encodedPublicKey`   | string               | Yes      | Public key generated from `Generate Key` |
-| `encoding`           | CoreCrytoRSAEncoding | Yes      | -                                        |
-| `encryptedText`      | string               | Yes      | Encrypted Text to be decrypted           |
-| `digest`             | CoreCryptoRSADigest  | yes      | -                                        |
-
-
-### ED25519
-
-#### Generate Key
-
-Generate ED25519 Key
-
+### Sign and verify
 
 ```dart
-final key = cryptoED25519Repository.generateKey();
-```
+final signature = cryptoVaultRsa.generateSignature(
+  encodedPrivateKey: key.privateKey,
+  plainText: plainText,
+);
 
-#### Generate Signature
-
-Generate ED25519 Signature
-
-
-```dart
-final signature =
-cryptoED25519Repository.generateSignature(encodedPrivateKey: key.privateKey, plainText: plainText);
-```
-
-| Parameter Name       | Type       | Required | Description                               |
-|----------------------|------------|----------|-------------------------------------------|
-| `encodedPrivateKey`  | string     | Yes      | Private key generated from `Generate Key` |
-| `plainText`          | string     | Yes      | Text to be made into a signature          |
-
-#### Verify Signature
-
-Verify ED25519 Signature
-
-
-```dart
-final isSignatureVerified = cryptoED25519Repository.verifySignature(
+final verified = cryptoVaultRsa.verifySignature(
   encodedPublicKey: key.publicKey,
-  encodedSignature: signature,
+  encodedSignature: signature!,
   plainText: plainText,
 );
 ```
 
-| Parameter Name       | Type       | Required | Description                              |
-|----------------------|------------|----------|------------------------------------------|
-| `encodedPublicKey`   | string     | Yes      | Public key generated from `Generate Key` |
-| `plainText`          | string     | Yes      | Text to be verified                      |
-| `encodedSignature`   | string     | Yes      | Signature to be verified by `plainText`  |
+## Ed25519
 
-### EC
-
-#### Generate Key Pair
-
-Generate EC Key Pair
+### Generate key
 
 ```dart
-final cryptoVaultEC = CryptoVaultEC();
-final key = cryptoVaultEC.generateKeyPair();
+final cryptoVaultEd25519 = CryptoVaultEd25519();
+final key = cryptoVaultEd25519.generateKey();
 ```
 
-#### Generate Shared Secret Key / Key Exchange
-
-Generate Shared Secret Key
-
+### Sign and verify
 
 ```dart
-final cryptoVaultEC = CryptoVaultEC();
-final secretKey = cryptoVaultEC.generateSharedSecret(encodedPrivateKey: "our encoded private key", peerEncodedPublicKey: "peer encoded public key");
+final signature = cryptoVaultEd25519.generateSignature(
+  encodedPrivateKey: key.privateKey,
+  plainText: plainText,
+);
+
+final verified = cryptoVaultEd25519.verifySignature(
+  encodedPublicKey: key.publicKey,
+  encodedSignature: signature!,
+  plainText: plainText,
+);
 ```
 
-| Parameter Name         | Type       | Required | Description                                                     |
-|------------------------|------------|----------|-----------------------------------------------------------------|
-| `encodedPrivateKey`    | string     | Yes      | Private key generated from `Generate Key`                       |
-| `peerEncodedPublicKey` | string     | Yes      | Public key from peer that want to be pair from our private key  |
+## EC (X25519 key exchange)
+
+### Generate key pair
+
+```dart
+final cryptoVaultEc = CryptoVaultEc();
+final key = await cryptoVaultEc.generateKeyPair();
+```
+
+### Shared secret
+
+```dart
+final secret = await cryptoVaultEc.generateSharedSecret(
+  encodedPrivateKey: 'our encoded private key',
+  peerEncodedPublicKey: 'peer encoded public key',
+);
+```
+
+## Public types
+
+| Type | Purpose |
+|------|---------|
+| `CryptoVaultAes` | AES encryption |
+| `CryptoVaultRsa` | RSA encrypt/decrypt/sign |
+| `CryptoVaultEd25519` | Ed25519 signing |
+| `CryptoVaultEc` | X25519 key exchange |
+| `CryptoVaultSignature` | Shared sign/verify contract |
+| `CryptoKey` | Public/private key pair |
+| `CryptoVaultException` | Domain errors |
+| `CryptoVaultRsaEncoding` | RSA padding mode |
+| `CryptoVaultRsaDigest` | RSA digest |
