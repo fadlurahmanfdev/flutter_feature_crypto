@@ -1,3 +1,17 @@
+[github_app]
+handle_push_trigger = true
+push_commands = [
+    "/agentic_review"
+]
+
+[pr_code_suggestions]
+enable_chat_in_code_suggestions = true
+
+[config]
+allow_only_specific_folders=['lib', 'example', 'test', '.github']
+
+[review_agent]
+issues_user_guidelines = """
 Project Type:
 - Flutter package/library
 - Production-ready reusable SDK
@@ -121,9 +135,6 @@ Dependency Rules:
 - Do not add heavy dependency for small functionality
 - Evaluate transitive dependency impact
 
-Versioning:
-- do not change versioning
-
 CI/CD:
 - Ensure package passes analyze
 - Ensure package passes tests
@@ -135,11 +146,4 @@ Pub.dev Rules:
 - Provide complete example app
 - Include screenshots if UI related
 - Avoid warnings during publish
-
-Agent Instructions:
-- Ensure backward compatibility
-- Do not generate placeholder implementations
-- Do not generate fake/mock production logic
-- Ask before introducing breaking changes
-- Prefer scalable and maintainable solutions
-- Follow existing repository patterns first
+"""
