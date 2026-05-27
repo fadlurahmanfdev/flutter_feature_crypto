@@ -1,0 +1,54 @@
+name: Release On Tag Publish And Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish-and-release:
+    runs-on: ubuntu-latest
+    environment: pub-dev
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.6
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run unit tests
+        run: flutter test
+
+      - name: Setup pub credentials
+        run: |
+          mkdir -p "$HOME/.config/dart"
+          cat <<JSON > "$HOME/.config/dart/pub-credentials.json"
+          {
+            "accessToken": "${{ secrets.PUB_ACCESS_TOKEN }}",
+            "refreshToken": "${{ secrets.PUB_REFRESH_TOKEN }}",
+            "idToken": "${{ secrets.PUB_ID_TOKEN }}",
+            "tokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+            "scopes": ["openid", "https://www.googleapis.com/auth/userinfo.email"],
+            "expiration": ${{ secrets.PUB_EXPIRATION }}
+          }
+          JSON
+
+      - name: Publish to pub.dev
+        run: dart pub publish -f
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
