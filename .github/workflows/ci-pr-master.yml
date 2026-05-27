@@ -1,0 +1,29 @@
+name: CI PR Master Test And Dry Run Publish
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test-and-dry-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.6
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run unit tests
+        run: flutter test
+
+      - name: Dry run publish
+        run: dart pub publish --dry-run
