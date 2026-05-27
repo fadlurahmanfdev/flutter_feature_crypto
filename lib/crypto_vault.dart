@@ -1,6 +1,6 @@
-library flutter_core_crypto;
+library crypto_vault;
 
-export 'data/dto/exception/core_crypto_exception.dart';
+export 'data/dto/exception/crypto_vault_exception.dart';
 export 'data/dto/model/crypto_key.dart';
 export 'data/enum/rsa_digest.dart';
 export 'data/enum/rsa_encoding.dart';
@@ -11,4 +11,4 @@ export 'data/repositories/crypto_rsa_repository_impl.dart';
 export 'data/repositories/crypto_ed25519_repository.dart';
 export 'data/repositories/crypto_ed25519_repository_impl.dart';
 
-export 'src/feature_crypto_ec.dart';
+export 'src/crypto_vault_ec.dart';

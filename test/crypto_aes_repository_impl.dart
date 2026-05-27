@@ -1,4 +1,4 @@
-import 'package:flutter_feature_crypto/flutter_feature_crypto.dart';
+import 'package:crypto_vault/crypto_vault.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> cryptoAesRepositoryImpl() async {
@@ -27,7 +27,7 @@ Future<void> cryptoAesRepositoryImpl() async {
     test('failed generate aes key with non 16/24/32 length key', () {
       try {
         cryptoAesRepository.getKey(25);
-      } on FeatureCryptoException catch (e) {
+      } on CryptoVaultException catch (e) {
         expect(e.code, "SIZE_NOT_VALID");
         expect(e.message, "Size must be 16/24/32");
       }

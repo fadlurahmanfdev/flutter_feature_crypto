@@ -1,5 +1,20 @@
 # Overview
 
+## Package
+
+Add this to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  crypto_vault: any
+```
+
+Import:
+
+```dart
+import 'package:crypto_vault/crypto_vault.dart';
+```
+
 Flutter library that provides a cryptography solution using a repository implementation. This library simplifies the process of handling cryptographic functions such as encryption, decryption, hashing, and digital signatures by leveraging a structured repository pattern. It is designed to be easy to integrate into any Flutter project, ensuring secure data handling and storage with a flexible and scalable architecture.
 
 ## Methods
@@ -165,8 +180,8 @@ final isSignatureVerified = cryptoED25519Repository.verifySignature(
 Generate EC Key Pair
 
 ```dart
-final featureCryptoEC = FeatureCryptoEC();
-final key = featureCryptoEC.generateKey();
+final cryptoVaultEC = CryptoVaultEC();
+final key = cryptoVaultEC.generateKeyPair();
 ```
 
 #### Generate Shared Secret Key / Key Exchange
@@ -175,8 +190,8 @@ Generate Shared Secret Key
 
 
 ```dart
-final featureCryptoEC = FeatureCryptoEC();
-final secretKey = featureCryptoEC.generateSharedSecret(encodedPrivateKey: "our encoded private key", peerEncodedPublicKey: "peer encoded public key");
+final cryptoVaultEC = CryptoVaultEC();
+final secretKey = cryptoVaultEC.generateSharedSecret(encodedPrivateKey: "our encoded private key", peerEncodedPublicKey: "peer encoded public key");
 ```
 
 | Parameter Name         | Type       | Required | Description                                                     |
