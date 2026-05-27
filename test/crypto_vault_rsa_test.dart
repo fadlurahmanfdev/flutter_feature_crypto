@@ -5,7 +5,14 @@ Future<void> cryptoVaultRsaTest() async {
   late CryptoVaultRsa cryptoVaultRsa;
   group('RSA Test', () {
     setUp(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
       cryptoVaultRsa = CryptoVaultRsa();
+    });
+
+    tearDown(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
     });
 
     test('generate rsa key success', () {
@@ -124,6 +131,34 @@ Future<void> cryptoVaultRsaTest() async {
         digest: CryptoVaultRsaDigest.sha256,
       );
       expect(decrypted, null);
+    });
+
+    test('throwOnError false returns null on rsa signature failure', () {
+      CryptoVaultConfig.throwOnError = false;
+      final key = cryptoVaultRsa.generateKey();
+      final signature = cryptoVaultRsa.generateSignature(
+        encodedPrivateKey: key.publicKey,
+        plainText: 'plain',
+      );
+      expect(signature, null);
+    });
+
+    test('throwOnError true throws on rsa signature failure', () {
+      CryptoVaultConfig.throwOnError = true;
+      final key = cryptoVaultRsa.generateKey();
+      expect(
+        () => cryptoVaultRsa.generateSignature(
+          encodedPrivateKey: key.publicKey,
+          plainText: 'plain',
+        ),
+        throwsA(
+          isA<CryptoVaultException>().having(
+            (e) => e.code,
+            'code',
+            'OPERATION_FAILED',
+          ),
+        ),
+      );
     });
   });
 }

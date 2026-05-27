@@ -5,7 +5,14 @@ Future<void> cryptoVaultAesTest() async {
   late CryptoVaultAes cryptoVaultAes;
   group('AES Test', () {
     setUp(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
       cryptoVaultAes = CryptoVaultAes();
+    });
+
+    tearDown(() {
+      CryptoVaultConfig.throwOnError = false;
+      CryptoVaultConfig.onError = null;
     });
 
     test('generate aes key success', () {
@@ -81,6 +88,34 @@ Future<void> cryptoVaultAesTest() async {
         plainText: plainText,
       );
       expect(encrypted == null, true);
+    });
+
+    test('throwOnError false returns null on aes encrypt failure', () {
+      CryptoVaultConfig.throwOnError = false;
+      final encrypted = cryptoVaultAes.encrypt(
+        key: 'bad-key',
+        ivKey: 'bad-iv',
+        plainText: 'plain',
+      );
+      expect(encrypted, null);
+    });
+
+    test('throwOnError true throws on aes encrypt failure', () {
+      CryptoVaultConfig.throwOnError = true;
+      expect(
+        () => cryptoVaultAes.encrypt(
+          key: 'bad-key',
+          ivKey: 'bad-iv',
+          plainText: 'plain',
+        ),
+        throwsA(
+          isA<CryptoVaultException>().having(
+            (e) => e.code,
+            'code',
+            'OPERATION_FAILED',
+          ),
+        ),
+      );
     });
   });
 }
