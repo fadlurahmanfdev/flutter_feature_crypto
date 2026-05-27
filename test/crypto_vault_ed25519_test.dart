@@ -1,7 +1,7 @@
 import 'package:crypto_vault/crypto_vault.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> cryptoVaultEd25519Test() async {
+Future<void> main() async {
   late CryptoVaultEd25519 cryptoVaultEd25519;
   group('ED25519 Test', () {
     setUp(() {

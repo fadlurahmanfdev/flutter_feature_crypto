@@ -31,3 +31,5 @@ build/
 .fvm
 
 local_*.sh
+
+coverage/
